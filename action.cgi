@@ -23,42 +23,42 @@ loginfo () {
 # Расчёт CRC16.
 crc () {
 
-	# Преобразуем выражение в строку.
-	str="$1"
-	
-	# Расчитываем количество циклов.
-	cnt=$((${#1}-2))
-	
-	# Начальное значение.
-	crc=0xFFFF
+    # Преобразуем выражение в строку.
+    str="$1"
+    
+    # Расчитываем количество циклов.
+    cnt=$((${#1}-2))
+    
+    # Начальное значение.
+    crc=0xFFFF
 
-	for i in `seq 0 2 $cnt`; do
+    for i in `seq 0 2 $cnt`; do
 
-		crc=$(( crc ^ 0x${str:$i:2} ))
+        crc=$(( crc ^ 0x${str:$i:2} ))
 
-		for j in `seq 0 7`; do
+        for j in `seq 0 7`; do
 
-			c=$(( crc >> 1 ))
+            c=$(( crc >> 1 ))
 
-			if [ $(( crc & 1 )) = 1 ]; then					
+            if [ $(( crc & 1 )) = 1 ]; then                 
 
-				let 'c ^= 0xA001'
-			fi
+                let 'c ^= 0xA001'
+            fi
 
-			crc=$c
+            crc=$c
 
-		done
+        done
 
-	done
-	
-	# Меняем местами байты.
-	c=$(( crc & 0xFF ))
-	c=$(( c << 8 ))
-	crc=$(( crc >> 8 ))
-	crc=$(( crc + c ))
-	
-	# Переводим в hex вид.
-	echo `printf "%04X" $crc`
+    done
+    
+    # Меняем местами байты.
+    c=$(( crc & 0xFF ))
+    c=$(( c << 8 ))
+    crc=$(( crc >> 8 ))
+    crc=$(( crc + c ))
+    
+    # Переводим в hex вид.
+    echo `printf "%04X" $crc`
 }
 
 echo "Content-type: text/html; charset=utf-8"
@@ -133,32 +133,32 @@ if [ -n "$query" ]; then
             
             ans=/tmp/ans.dat
             
-			# Сброс параметров.
-			stty -F $tty 4:0:18b2:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
+            # Сброс параметров.
+            stty -F $tty 4:0:18b2:0:0:0:0:0:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
 
-			# Настройка.
-			stty -F $tty raw $baud $bits
+            # Настройка.
+            stty -F $tty raw $baud $bits
 
-			# Готовимся к приёму ответа.
-			( dd if=$tty of=$ans count=256 2> /dev/null ) &
+            # Готовимся к приёму ответа.
+            ( dd if=$tty of=$ans count=256 2> /dev/null ) &
 
-			# Задержка на подготовку.
-			/usr/bin/sleep 20e-3
+            # Задержка на подготовку.
+            /usr/bin/sleep 20e-3
 
-			# Добавляем crc.			
-			data=$data$(crc $data)
+            # Добавляем crc.            
+            data=$data$(crc $data)
 
-			# Записываем событие в журнал.
-			tmp=$(printf "$data" | hexdump -ve '/1 "0x%02X_"' | sed 's/\(.*\)_/\1/')
-			loginfo "( => ) $tmp" 
+            # Записываем событие в журнал.
+            tmp=$(printf "$data" | hexdump -ve '/1 "0x%02X_"' | sed 's/\(.*\)_/\1/')
+            loginfo "( => ) $tmp" 
 
-			# Кодируем данные.
-			str="$data"
-			cnt=$((${#str}-2))
-			for i in `seq 0 2 $cnt`; do tmp2=$tmp2"\x${str:$i:2}"; done
+            # Кодируем данные.
+            str="$data"
+            cnt=$((${#str}-2))
+            for i in `seq 0 2 $cnt`; do tmp2=$tmp2"\x${str:$i:2}"; done
 
-			# Выполняем запрос.
-			printf $tmp2 > $tty
+            # Выполняем запрос.
+            printf $tmp2 > $tty
 
             # Принимаем ответ.
             /usr/bin/sleep $Timeout; kill $!
