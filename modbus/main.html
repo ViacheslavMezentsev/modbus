@@ -1,0 +1,67 @@
+<script src="/modules/modbus/webtoolkit.base64.js"></script>
+<script src="/modules/modbus/modbus.js"></script>
+<script src="/modules/modbus/main.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+// Действия после загрузки страницы.
+window.addEventListener( "load", function() {
+
+    query.Load();
+
+    // Обновляем первую вкладку.
+    document.getElementById( 'TabSheet1').onclick();
+
+});
+
+</script>
+
+<h4>Набор функций для работы по протоколу Modbus-RTU.</h4>
+
+<div class="tabcontrol">
+
+    <a onclick="tab.Select( this, 'TabQuery' );" href="javascript:void(0);" id="TabSheet1">Скрипт</a>
+    <a onclick="tab.Select( this, 'TabDebug' );" href="javascript:void(0);">Отладка</a>
+    <a onclick="tab.Select( this, 'TabAbout' );" href="javascript:void(0);">О модуле</a>
+
+    <div id="TabQuery" class="visible">
+           
+        <textarea id="function" rows="25" cols="100"></textarea><br>
+        <button type="button" onclick="query.Save();">Сохранить</button><button type="button" onclick="query.Execute();">Выполнить</button><br>
+        <textarea id="console" rows="10" cols="100"></textarea><br>
+        <button type="button" onclick="document.getElementById( 'console' ).value = '';">Очистить</button>
+
+    </div>
+
+    <div id="TabDebug" class="hidden">
+        <textarea id="debug"></textarea><br>
+        <button type="button" onclick="query.ClearLog();">Очистить</button>
+    </div>
+
+    <div id="TabAbout" class="hidden">
+        <table>
+            <tbody id="about">
+                <tr style="background:#EEEEEE">
+                    <td>Версия</td>
+                    <td>0.1.5447.27641</td>
+                </tr>
+                <tr style="background:#EEEEEE">
+                    <td>Автор</td>
+                    <td>Мезенцев Вячеслав Николаевич</td>
+                </tr>
+                <tr style="background:#EEEEEE">
+                    <td>Эл. почта</td>
+                    <td><a href="mailto:viacheslavmezentsev@gmail.com">viacheslavmezentsev@gmail.com</a></td>
+                </tr>
+                <tr style="background:#EEEEEE">
+                    <td valign="top">Зависимости</td>
+                    <td valign="top">
+                        coreutils-sleep
+                    <td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
