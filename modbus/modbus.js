@@ -265,7 +265,7 @@ Modbus.prototype = {
 
             case WRITE_SINGLE_COIL:
             case WRITE_SINGLE_REGISTER:
-			case WRITE_MULTIPLE_REGISTERS: { task.buffer = data.slice(2); break; }
+            case WRITE_MULTIPLE_REGISTERS: { task.buffer = data.slice(2); break; }
 
         }
 
@@ -354,10 +354,10 @@ Modbus.prototype = {
 
             if ( task.func == WRITE_MULTIPLE_REGISTERS ) {
 
-				bytes.push( task.value.length >> 8 );
-				bytes.push( task.value.length & 0xFF );
+                bytes.push( task.value.length >> 8 );
+                bytes.push( task.value.length & 0xFF );
                 bytes.push( 2 * task.value.length );
-				
+                
             }
 
             if ( Array.isArray( task.value ) ) {
@@ -374,8 +374,8 @@ Modbus.prototype = {
                 bytes.push( task.value & 0xFF );
             }
 
-			// CRC высчитывается на стороне shell-скрипта.
-			
+            // CRC высчитывается на стороне shell-скрипта.
+            
             // Преобразуем массив в строку.
             var adu = '';
 

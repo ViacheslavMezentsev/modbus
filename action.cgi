@@ -56,9 +56,9 @@ crc () {
     c=$(( c << 8 ))
     crc=$(( crc >> 8 ))
     crc=$(( crc + c ))
-    
+
     # Переводим в hex вид.
-    echo `printf "%04X" $crc`
+    printf "%04X" $crc
 }
 
 echo "Content-type: text/html; charset=utf-8"
@@ -144,18 +144,18 @@ if [ -n "$query" ]; then
 
             # Задержка на подготовку.
             /usr/bin/sleep 20e-3
-
+            
             # Добавляем crc.            
             data=$data$(crc $data)
-
-            # Записываем событие в журнал.
-            tmp=$(printf "$data" | hexdump -ve '/1 "0x%02X_"' | sed 's/\(.*\)_/\1/')
-            loginfo "( => ) $tmp" 
-
+            
             # Кодируем данные.
             str="$data"
             cnt=$((${#str}-2))
             for i in `seq 0 2 $cnt`; do tmp2=$tmp2"\x${str:$i:2}"; done
+
+            # Записываем событие в журнал.
+            tmp=$(printf $tmp2 | hexdump -ve '/1 "0x%02X_"' | sed 's/\(.*\)_/\1/')
+            loginfo "( => ) $tmp" 
 
             # Выполняем запрос.
             printf $tmp2 > $tty
