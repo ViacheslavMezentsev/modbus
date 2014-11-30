@@ -357,11 +357,7 @@ Modbus.prototype = {
                 bytes.push( task.value.length >> 8 );
                 bytes.push( task.value.length & 0xFF );
                 bytes.push( 2 * task.value.length );
-                
-            }
-
-            if ( Array.isArray( task.value ) ) {
-
+             
                 for ( var n = 0; n < task.value.length; n++ ) {
 
                     bytes.push( task.value[n] >> 8 );
